@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SAS GENAP SMP ALQODIRIYAH 2026</title>
+    <!-- Font modern Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === TEMA GEN Z (DARK GLASSMORPHISM + NEON) === */
+        :root {
+            --bg-dark: #09090b;
+            --neon-purple: #8b5cf6;
+            --neon-cyan: #06b6d4;
+            --card-glass: rgba(24, 24, 27, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(255, 255, 255, 0.03);
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ambient-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .orb-1, .orb-2 {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
+            animation: float 12s infinite ease-in-out alternate;
+        }
+        .orb-1 {
+            background: var(--neon-purple); width: 400px; height: 400px;
+            top: -100px; left: -100px;
+        }
+        .orb-2 {
+            background: var(--neon-cyan); width: 350px; height: 350px;
+            bottom: -50px; right: -50px; animation-delay: -5s;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 150px) scale(1.2); }
+        }
+
+        header {
+            background: rgba(9, 9, 11, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 50;
+        }
+        header .brand { display: flex; align-items: center; gap: 12px; }
+        header .school-logo { width: 40px; height: 40px; object-fit: contain; }
+        header h1 { 
+            font-size: 1.1rem; font-weight: 700; 
+            background: linear-gradient(to right, #c4b5fd, #67e8f9);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        header .user-info { font-size: 0.85rem; color: var(--text-muted); text-align: right; }
+
+        .layout-wrapper { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+
+        .section { display: none; animation: slideUpFade 0.4s ease-out forwards; }
+        .section.active { display: block; }
+        
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 30px; margin-bottom: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-header { text-align: center; margin-bottom: 30px; }
+        .section-header h2 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
+        .section-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #e2e8f0; }
+        input[type="text"], select, textarea {
+            width: 100%; padding: 14px 16px; border-radius: 12px;
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            color: #fff; font-size: 1rem; transition: all 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--neon-purple); background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        select option { background: var(--bg-dark); color: #fff; }
+
+        .question-card {
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 24px; margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .question-card:hover { border-color: rgba(139, 92, 246, 0.3); }
+        .q-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 16px; font-weight: 500; }
+        .q-badge {
+            display: inline-block; background: rgba(139, 92, 246, 0.2); color: #c4b5fd;
+            font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; font-weight: 600;
+        }
+
+        .options-group { display: flex; flex-direction: column; gap: 10px; }
+        .option-label {
+            display: flex; align-items: center; padding: 14px 18px;
+            background: var(--input-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
+        }
+        .option-label:hover { background: rgba(255,255,255,0.06); }
+        .option-label:has(input:checked) {
+            background: rgba(139, 92, 246, 0.15); border-color: var(--neon-purple);
+        }
+        .option-label input { margin-right: 14px; transform: scale(1.2); accent-color: var(--neon-purple); cursor: pointer; }
+
+        textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+
+        .action-bar { display: flex; justify-content: space-between; gap: 16px; margin-top: 20px; }
+        .action-bar.right { justify-content: flex-end; }
+        
+        button {
+            background: linear-gradient(135deg, var(--neon-purple) 0%, #6d28d9 100%);
+            color: white; border: none; padding: 14px 28px; font-size: 1rem;
+            border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;
+            display: inline-flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6); }
+        button:disabled { background: #3f3f46; color: #71717a; box-shadow: none; cursor: not-allowed; transform: none; }
+        
+        .btn-outline { background: transparent; border: 1px solid var(--card-border); color: #fff; }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
+        .btn-success { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-success:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
+
+        .loading-text { text-align: center; color: var(--neon-cyan); font-weight: 600; padding: 40px; }
+
+        @media (max-width: 768px) {
+            header { padding: 12px 16px; }
+            header h1 { font-size: 1rem; }
+            .layout-wrapper { margin: 15px auto; }
+            .glass-card, .question-card { padding: 20px; border-radius: 16px; }
+            .action-bar { flex-direction: column; }
+            button { width: 100%; padding: 16px; font-size: 1rem; }
+            .btn-outline { order: 2; }
+            .orb-1 { width: 250px; height: 250px; }
+            .orb-2 { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-container">
+        <div class="orb-1"></div>
+        <div class="orb-2"></div>
+    </div>
+
+    <header>
+        <div class="brand">
+            <!-- Masukkan link logo sekolah Anda di bawah ini -->
+            <img class="school-logo" src="https://i.ibb.co.com/dw6FCpws/logo-smp.jpg" alt="Logo">
+            <h1>SAS GENAP ALQODIRIYAH</h1>
+        </div>
+        <div class="user-info" id="top-user-info"></div>
+    </header>
+
+    <div class="layout-wrapper">
+        <!-- BAGIAN 1 -->
+        <div id="section-1" class="section active">
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2>Portal Ujian Siswa</h2>
+                    <p id="teks-sambutan">Lengkapi identitas dengan benar sebelum memulai.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Ketik nama lengkap kamu..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kelas">Pilih Kelas</label>
+                    <select id="kelas" required>
+                        <option value="" disabled selected>-- Pilih Kelas --</option>
+                        <option value="VII A">VII A</option>
+                        <option value="VII B">VII B</option>
+                        <option value="VIII A">VIII A</option>
+                        <option value="VIII B">VIII B</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="noujian">Nomor Ujian</label>
+                    <input type="text" id="noujian" placeholder="Isi sesuai pada kartu ujian" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mapel">Mata Pelajaran</label>
+                    <select id="mapel" required>
+                        <option value="Seni Rupa Kelas VIII" selected>Seni Rupa Kelas VIII</option>
+                    </select>
+                </div>
+                
+                <div class="action-bar right">
+                    <button id="btn-login" onclick="startExam()">Lanjut ke Soal ➔</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BAGIAN 2 -->
+        <div id="section-2" class="section">
+            <div class="section-header" style="margin-top: 10px;">
+                <h2>Bagian 2: Soal Objektif</h2>
+                <p>Otomatis tersimpan di memori perangkat.</p>
+            </div>
+            <div id="objective-container">
+                <div class="loading-text">Sedang terhubung ke server...</div>
+            </div>
+            <div class="action-bar">
+                <button class="btn-outline" onclick="navSection(2, 1)">🡨 Kembali</button>
+                <button onclick="navSection(2, 3)">Lanjut Soal Essay ➔</button>
+            </div>
+        </div>
+
+        <!-- BAGIAN 3 -->
+        <div id="section-3" class="section">
+            <div class="section-header" style="margin-top: 10px;">
+                <h2>Bagian 3: Soal Essay</h2>
+            </div>
+            <div id="essay-container"></div>
+            <div class="action-bar">
+                <button class="btn-outline" onclick="navSection(3, 2)">🡨 Kembali</button>
+                <button id="btn-submit" class="btn-success" onclick="finishExam()">Kumpulkan Jawaban ✔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIKA API & STATE MANAGEMENT -->
+    <script>
+        // MASUKKAN URL APLIKASI WEB ANDA DI DALAM TANDA KUTIP DI BAWAH INI
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzyApxjwFnDNr86hYmEdrmcVfmaHrrN29kVvwk1O8tCFKDTij05Oa7hK38lb9g05HLOew/exec"; 
+
+        let objQuestions = []; 
+        let essQuestions = []; 
+        let jawabanSiswa = {}; 
+
+        window.onload = async () => {
+            try {
+                // Tarik data menggunakan fetch (Metode koneksi eksternal)
+                const response = await fetch(scriptURL + "?action=getQuestions");
+                const data = await response.json();
+                parseDataFromServer(data);
+            } catch (err) {
+                document.getElementById('objective-container').innerHTML = `<div class="loading-text" style="color:#ef4444;">Gagal memuat soal. Pastikan link API (scriptURL) di file index.html sudah benar.</div>`;
+            }
+        };
+
+        function parseDataFromServer(data) {
+            let tempObj = [];
+            let tempEss = [];
+
+            data.forEach(item => {
+                let keyJenis = Object.keys(item).find(k => k.toLowerCase().includes('jenis'));
+                let jenisSoal = (keyJenis && item[keyJenis]) ? item[keyJenis].toString().toLowerCase() : '';
+                
+                if (jenisSoal.includes('essay') || jenisSoal.includes('esai') || jenisSoal.includes('uraian')) {
+                    tempEss.push({ noAsli: item.No, question: item.Pertanyaan });
+                } else {
+                    let typeCode = 'pg'; 
+                    if (jenisSoal.includes('komplek') || jenisSoal.includes('pgk') || jenisSoal.includes('centang')) {
+                        typeCode = 'pgk';
+                    }
+                    let optionsArray = [];
+                    if (item.Opsi_A) optionsArray.push(item.Opsi_A);
+                    if (item.Opsi_B) optionsArray.push(item.Opsi_B);
+                    if (item.Opsi_C) optionsArray.push(item.Opsi_C);
+                    if (item.Opsi_D) optionsArray.push(item.Opsi_D);
+
+                    tempObj.push({
+                        noAsli: item.No, type: typeCode, question: item.Pertanyaan, options: optionsArray
+                    });
+                }
+            });
+
+            // Sesi Pemulihan
+            let savedSession = localStorage.getItem('cbt_session_alqodiriyah');
+            if (savedSession) {
+                let sessionData = JSON.parse(savedSession);
+                if (sessionData.objQuestions && sessionData.objQuestions.length > 0) {
+                    objQuestions = sessionData.objQuestions;
+                } else {
+                    shuffleArray(tempObj); objQuestions = tempObj;
+                }
+                essQuestions = tempEss;
+                jawabanSiswa = sessionData.jawabanSiswa || {};
+                
+                document.getElementById('nama').value = sessionData.nama || '';
+                document.getElementById('kelas').value = sessionData.kelas || '';
+                document.getElementById('noujian').value = sessionData.noujian || '';
+                
+                document.getElementById('btn-login').innerText = "Lanjutkan Ujian ➔";
+                document.getElementById('teks-sambutan').innerHTML = "<span style='color: var(--neon-cyan);'>Sesi ujian terputus ditemukan! Jawaban aman.</span>";
+            } else {
+                shuffleArray(tempObj); objQuestions = tempObj; essQuestions = tempEss;
+            }
+            renderQuestions();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function renderQuestions() {
+            const objContainer = document.getElementById('objective-container');
+            objContainer.innerHTML = '';
+            
+            objQuestions.forEach((q, idx) => {
+                let badgeText = q.type === 'pgk' ? 'Pilihan Ganda Kompleks' : 'Pilihan Ganda';
+                let inputType = q.type === 'pgk' ? 'checkbox' : 'radio';
+                
+                let html = `
+                    <div class="question-card">
+                        <div class="q-badge">${badgeText}</div>
+                        <div class="q-text">${idx + 1}. ${q.question}</div>
+                        <div class="options-group">`;
+                
+                let terpilihArray = jawabanSiswa['q' + q.noAsli] ? jawabanSiswa['q' + q.noAsli].split(" | ") : [];
+
+                q.options.forEach(opt => {
+                    let isChecked = terpilihArray.includes(opt) ? 'checked' : '';
+                    html += `
+                        <label class="option-label">
+                            <input type="${inputType}" name="obj_${q.noAsli}" value="${opt}" ${isChecked} onchange="autoSave()">
+                            ${opt}
+                        </label>`;
+                });
+                
+                html += `</div></div>`;
+                objContainer.innerHTML += html;
+            });
+
+            const essContainer = document.getElementById('essay-container');
+            essContainer.innerHTML = '';
+
+            essQuestions.forEach((q, idx) => {
+                let isiLama = jawabanSiswa['q' + q.noAsli] || '';
+                let html = `
+                    <div class="question-card">
+                        <div class="q-badge">Essay / Uraian</div>
+                        <div class="q-text">${idx + 1}. ${q.question}</div>
+                        <textarea id="ess_${q.noAsli}" placeholder="Ketik jawabanmu di sini..." oninput="autoSave()">${isiLama}</textarea>
+                    </div>`;
+                essContainer.innerHTML += html;
+            });
+        }
+
+        function startExam() {
+            const nama = document.getElementById('nama').value;
+            const kelas = document.getElementById('kelas').value;
+            const noujian = document.getElementById('noujian').value;
+
+            if(!nama || !kelas || !noujian) {
+                alert("Identitas belum lengkap!"); return;
+            }
+
+            const btnLogin = document.getElementById('btn-login');
+            btnLogin.innerText = "Memvalidasi..."; btnLogin.disabled = true;
+
+            // Validasi ke server via Fetch API
+            fetch(scriptURL + "?action=checkLogin&noujian=" + encodeURIComponent(noujian))
+                .then(res => res.json())
+                .then(data => {
+                    if (data.isTerdaftar) {
+                        alert("Akses Ditolak! Nomor Ujian ini sudah terekam di server.");
+                        btnLogin.innerText = "Lanjut ke Soal ➔"; btnLogin.disabled = false;
+                        localStorage.removeItem('cbt_session_alqodiriyah'); 
+                    } else {
+                        document.getElementById('top-user-info').innerHTML = `${nama} &bull; ${kelas}`;
+                        simpanStateSesi(); navSection(1, 2);
+                    }
+                })
+                .catch(err => {
+                    alert("Koneksi gagal. Periksa jaringan internet kamu.");
+                    btnLogin.innerText = "Lanjut ke Soal ➔"; btnLogin.disabled = false;
+                });
+        }
+
+        function autoSave() {
+            objQuestions.forEach(q => {
+                const inputs = document.querySelectorAll(`input[name="obj_${q.noAsli}"]:checked`);
+                let values = [];
+                inputs.forEach(i => values.push(i.value));
+                jawabanSiswa['q' + q.noAsli] = values.join(" | ");
+            });
+            essQuestions.forEach(q => {
+                const text = document.getElementById(`ess_${q.noAsli}`).value;
+                jawabanSiswa['q' + q.noAsli] = text;
+            });
+            simpanStateSesi();
+        }
+
+        function simpanStateSesi() {
+            let sessionData = {
+                nama: document.getElementById('nama').value,
+                kelas: document.getElementById('kelas').value,
+                noujian: document.getElementById('noujian').value,
+                objQuestions: objQuestions, 
+                jawabanSiswa: jawabanSiswa
+            };
+            localStorage.setItem('cbt_session_alqodiriyah', JSON.stringify(sessionData));
+        }
+
+        function navSection(current, next) {
+            document.getElementById(`section-${current}`).classList.remove('active');
+            document.getElementById(`section-${next}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function finishExam() {
+            const yakin = confirm("Yakin ingin menyelesaikan ujian?");
+            if(!yakin) return;
+
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.innerText = "Mengirim..."; btnSubmit.disabled = true;
+            
+            autoSave(); 
+
+            let kirimObjektif = {}; let kirimEssay = {};
+            objQuestions.forEach(q => { kirimObjektif['q' + q.noAsli] = jawabanSiswa['q' + q.noAsli] || ''; });
+            essQuestions.forEach(q => { kirimEssay['q' + q.noAsli] = jawabanSiswa['q' + q.noAsli] || ''; });
+
+            let paketKirim = {
+                nama: document.getElementById('nama').value, kelas: document.getElementById('kelas').value,
+                noujian: document.getElementById('noujian').value, jawabanObjektif: kirimObjektif, jawabanEssay: kirimEssay
+            };
+
+            // Mengirim ke server menggunakan Fetch POST murni
+            fetch(scriptURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(paketKirim)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    localStorage.removeItem('cbt_session_alqodiriyah');
+                    alert("Mantap! Jawaban kamu sudah terekam di sistem. Ujian selesai.");
+                    window.location.reload();
+                } else { throw new Error(data.message); }
+            })
+            .catch(err => {
+                alert("Gagal mengirim data. " + err.message);
+                btnSubmit.innerText = "Kumpulkan Jawaban ✔"; btnSubmit.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
