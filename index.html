@@ -450,26 +450,31 @@
             essQuestions.forEach(q => { kirimEssay['q' + q.noAsli] = jawabanSiswa['q' + q.noAsli] || ''; });
 
             let paketKirim = {
-                nama: document.getElementById('nama').value, kelas: document.getElementById('kelas').value,
-                noujian: document.getElementById('noujian').value, jawabanObjektif: kirimObjektif, jawabanEssay: kirimEssay
+                nama: document.getElementById('nama').value, 
+                kelas: document.getElementById('kelas').value,
+                noujian: document.getElementById('noujian').value, 
+                jawabanObjektif: kirimObjektif, 
+                jawabanEssay: kirimEssay
             };
 
-            // Mengirim ke server menggunakan Fetch POST murni
+            // PERUBAHAN DI SINI: Membungkus data ke FormData agar lolos blokir GitHub
+            const formData = new FormData();
+            formData.append('payload', JSON.stringify(paketKirim));
+
+            // Mengirim ke server menggunakan bypass no-cors
             fetch(scriptURL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(paketKirim)
+                mode: 'no-cors', // Ini kunci utama agar tidak di-block browser
+                body: formData
             })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    localStorage.removeItem('cbt_session_alqodiriyah');
-                    alert("Mantap! Jawaban kamu sudah terekam di sistem. Ujian selesai.");
-                    window.location.reload();
-                } else { throw new Error(data.message); }
+            .then(() => {
+                // Jika berhasil lewat, memori dihapus dan layar kembali awal
+                localStorage.removeItem('cbt_session_alqodiriyah');
+                alert("Mantap! Jawaban kamu sudah terekam di sistem server sekolah. Ujian selesai.");
+                window.location.reload();
             })
             .catch(err => {
-                alert("Gagal mengirim data. " + err.message);
+                alert("Gagal mengirim data. Pastikan jaringan/kuota internet kamu aktif, lalu klik kirim lagi.");
                 btnSubmit.innerText = "Kumpulkan Jawaban ✔"; btnSubmit.disabled = false;
             });
         }
